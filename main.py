@@ -1,15 +1,10 @@
-#pip install requests, fake_useragent, bs4, lxml
-#pip install telebot
-#pip install python-dotenv
-
 import telebot
-from dotenv import load_dotenv
 from telebot import types
 
 from parse import get
 from find_number import find_number
 
-import dotenv
+from dotenv import load_dotenv
 import os
 
 load_dotenv()
@@ -116,14 +111,12 @@ def main(callback):
             for j in range(len(data['types_of_work'])):
                 res = get(data['desired_job'], data['desired_city'], TYPES_OF_YEARS_OF_EXPERIENCE[i], TYPES_OF_WORK[data['types_of_work'][j]], data['desired_salary'][j], data['without_salary'])
                 for vacancy in res:
-                    #print(vacancy)
                     bot.send_message(callback.message.chat.id, vacancy, parse_mode='html')
 
     if data['years_of_experience'] >= 6:
         for j in range(len(data['types_of_work'])):
             res = get(data['desired_job'], data['desired_city'], TYPES_OF_YEARS_OF_EXPERIENCE[-1], TYPES_OF_WORK[data['types_of_work'][j]], data['desired_salary'][j], data['without_salary'])
             for vacancy in res:
-                #print(vacancy)
                 bot.send_message(callback.message.chat.id, vacancy, parse_mode='html')
 
 bot.infinity_polling()

@@ -26,7 +26,6 @@ def get(desired_job, desired_city, type_of_years_of_experience, type_of_work, sa
         params['label'] = 'with_salary'
 
     response = requests.get(URL, params=params, headers=HEADER)
-    #print(response.url)
     soup = BeautifulSoup(response.text, "lxml")
 
     amount_of_vacancies = find_number(soup.find("h1", class_='magritte-text___gMq2l_7-0-2 magritte-text-overflow___UBrTV_7-0-2 magritte-text-typography-small___QbQNX_7-0-2 magritte-text-style-primary___8SAJp_7-0-2').text)
@@ -48,7 +47,6 @@ def get(desired_job, desired_city, type_of_years_of_experience, type_of_work, sa
             params['label'] = 'with_salary'
 
         response = requests.get(URL, params=params, headers=HEADER)
-        #print(response.url)
         soup = BeautifulSoup(response.text, "lxml")
 
         blocks = soup.find_all("div", class_='vacancy-info--ieHKDTkezpEj0Gsx')
@@ -67,6 +65,5 @@ def get(desired_job, desired_city, type_of_years_of_experience, type_of_work, sa
 
             cur_link = block.find("a")
             res.append(f'{cur_job.text} - {cur_link['href']}')
-            # print(cur_city.text)
 
     return res
