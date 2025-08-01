@@ -1,1 +1,1 @@
-# job-finder
+# f1nd-job-bot
