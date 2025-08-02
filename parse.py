@@ -3,12 +3,14 @@ import fake_useragent
 from bs4 import BeautifulSoup
 
 from find_number import find_number
+from translate import translate
 
-user_agent = fake_useragent.UserAgent().random
-HEADER = {'user-agent': user_agent}
 URL = 'https://brest.rabota.by/search/vacancy'
 
-def get(desired_job, desired_city, type_of_years_of_experience, type_of_work, salary, without_salary) -> list:
+def get(cur_language, desired_job, desired_city, type_of_years_of_experience, type_of_work, salary, without_salary) -> list:
+    user_agent = fake_useragent.UserAgent().random
+    header = {'user-agent': user_agent}
+
     res = []
 
     params = {
@@ -22,10 +24,10 @@ def get(desired_job, desired_city, type_of_years_of_experience, type_of_work, sa
         'search_period': 0,
         'search_field': 'name'
     }
-    if not without_salary:
+    if without_salary == False:
         params['label'] = 'with_salary'
 
-    response = requests.get(URL, params=params, headers=HEADER)
+    response = requests.get(URL, params=params, headers=header)
     soup = BeautifulSoup(response.text, "lxml")
 
     amount_of_vacancies = find_number(soup.find("h1", class_='magritte-text___gMq2l_7-0-2 magritte-text-overflow___UBrTV_7-0-2 magritte-text-typography-small___QbQNX_7-0-2 magritte-text-style-primary___8SAJp_7-0-2').text)
@@ -46,7 +48,7 @@ def get(desired_job, desired_city, type_of_years_of_experience, type_of_work, sa
         if not without_salary:
             params['label'] = 'with_salary'
 
-        response = requests.get(URL, params=params, headers=HEADER)
+        response = requests.get(URL, params=params, headers=header)
         soup = BeautifulSoup(response.text, "lxml")
 
         blocks = soup.find_all("div", class_='vacancy-info--ieHKDTkezpEj0Gsx')
@@ -64,6 +66,6 @@ def get(desired_job, desired_city, type_of_years_of_experience, type_of_work, sa
                 continue
 
             cur_link = block.find("a")
-            res.append(f'{cur_job.text} - {cur_link['href']}')
+            res.append(f'{translate(cur_job.text, 'ru', cur_language)} - {cur_link['href']}')
 
     return res
