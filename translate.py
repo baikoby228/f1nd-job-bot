@@ -22,3 +22,24 @@ def translate_city(text: str) -> str:
     res, a, b = process.extractOne(translated, CITIES)
 
     return res
+
+client = Client()
+def translate_job(text: str, source: str) -> str:
+    if source == 'ru':
+        return text
+
+    response = client.chat.completions.create(
+        model='gpt-4o-mini',
+        messages=[
+            {'role': 'user', 'content': text},
+            {'role': 'system', 'content': f'Твоя задача перевести данное слово с языка {source} на язык ru. '
+                                          + 'Ты должен перевести слово, как название профессии. '
+                                          + 'Ответь только перевеодом, без объяснений, без вежливости без знаков перпинания. '
+                                          + 'Примеры: '
+                                          + '1. Если нужно перевести с en: ввод пользователья "Cleaner", твой ответ "уборщик"; '
+                                          + '2. Если нужно перевести с be: ввод пользователья "прыбіральнік", твой ответ "уборщик".'}
+        ],
+        web_search=False
+    )
+
+    return response.choices[0].message.content

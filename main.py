@@ -6,7 +6,7 @@ import os
 
 from parse import get
 from find_number import find_number
-from translate import translate, translate_city
+from translate import translate,    translate_job, translate_city
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')
@@ -62,7 +62,7 @@ def info_processing(message):
 
     match data['step']:
         case 0:
-            data['desired_job'] = translate(message.text, cur_language, 'ru')
+            data['desired_job'] = translate_job(message.text, cur_language)
             bot.send_message(message.chat.id, translate('Введите название города', 'ru', cur_language), parse_mode='html')
             data['step'] += 1
         case 1:
