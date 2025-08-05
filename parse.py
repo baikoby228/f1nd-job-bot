@@ -7,11 +7,9 @@ from translate import translate
 
 URL = 'https://brest.rabota.by/search/vacancy'
 
-def get(cur_language, desired_job, desired_city, type_of_years_of_experience, type_of_work, salary, without_salary) -> list:
+def get_amount_of_pages(desired_job,  type_of_years_of_experience, type_of_work, salary, without_salary) -> int:
     user_agent = fake_useragent.UserAgent().random
     header = {'user-agent': user_agent}
-
-    res = []
 
     params = {
         'area': 16,
@@ -24,7 +22,7 @@ def get(cur_language, desired_job, desired_city, type_of_years_of_experience, ty
         'search_period': 0,
         'search_field': 'name'
     }
-    if without_salary == False:
+    if not without_salary:
         params['label'] = 'with_salary'
 
     response = requests.get(URL, params=params, headers=header)
@@ -33,6 +31,15 @@ def get(cur_language, desired_job, desired_city, type_of_years_of_experience, ty
     amount_of_vacancies = find_number(soup.find("h1", class_='magritte-text___gMq2l_7-0-2 magritte-text-overflow___UBrTV_7-0-2 magritte-text-typography-small___QbQNX_7-0-2 magritte-text-style-primary___8SAJp_7-0-2').text)
     amount_of_pages = (amount_of_vacancies + 19) // 20
 
+    return amount_of_pages
+
+def get(cur_language, desired_job, desired_city, type_of_years_of_experience, type_of_work, salary, without_salary) -> list:
+    user_agent = fake_useragent.UserAgent().random
+    header = {'user-agent': user_agent}
+
+    res = []
+
+    amount_of_pages = get_amount_of_pages(desired_job,  type_of_years_of_experience, type_of_work, salary, without_salary)
     for page in range(amount_of_pages):
         params = {
             'area': 16,
