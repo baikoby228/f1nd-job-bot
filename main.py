@@ -51,6 +51,16 @@ def change_language(message):
 @bot.callback_query_handler(func=lambda call: call.data in LANGUAGES_SHORT)
 def callback_change_language(callback):
     user_language[callback.from_user.id] = callback.data
+    cur_language = callback.data
+
+    long_language_name: str
+    for i in range(3):
+        if LANGUAGES_SHORT[i] == callback.data:
+            long_language_name = LANGUAGES_LONG[i]
+
+    bot.send_message(callback.message.chat.id, translate(f'{long_language_name} выбран \n', 'ru', cur_language)
+                                               + '\n<code>/start</code> '
+                                               + translate('для нового запроса', 'ru', cur_language), parse_mode='html')
 
 TYPES_OF_WORK_RU = ['За месяц', 'За смену', 'За час', 'За вахту', 'За услугу']
 is_from_callback = False
