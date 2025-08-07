@@ -2,7 +2,6 @@ import os
 from dotenv import load_dotenv
 import telebot
 from telebot import types
-from job import job_process
 
 from parse import get
 from find_number import find_number
@@ -50,9 +49,14 @@ def help(message):
 
 @bot.message_handler(commands=['job'])
 def job(message):
-    user_id = message.from_user.id
-    chat_id = message.chat.id
-    job_process(bot, user_id, chat_id)
+    data = get_data(message.from_user.id)
+    language = get_user_language(message.from_user.id)
+
+    data['step'] = 0
+    for x in range(5):
+        data[x] = -1
+
+    bot.send_message(message.chat.id, translate('Введите профессию', 'ru', language), parse_mode='html')
 
 
 @bot.message_handler(commands=['language'])
@@ -155,7 +159,7 @@ def callback_without_salary(callback):
             data['types_of_work'].append(i)
             data['desired_salary'].append(data[i])
 
-    bot.send_message(callback.message.chat.id, translate('Все данные получены, сейчас начнёться поиск', 'ru', language), parse_mode='html')
+    bot.send_message(callback.message.chat.id, translate('Все данные получены, сейчас начнётся поиск', 'ru', language), parse_mode='html')
     iterate(callback)
     bot.send_message(callback.message.chat.id, f'{translate('Поиск окончен', 'ru', language)}\n<code>/start</code> {translate('для нового запроса', 'ru', language)}', parse_mode='html')
     del_data(callback.from_user.id)
