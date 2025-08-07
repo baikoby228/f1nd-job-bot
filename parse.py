@@ -33,7 +33,7 @@ def get_amount_of_pages(desired_job,  type_of_years_of_experience, type_of_work,
 
     return amount_of_pages
 
-def get(cur_language, desired_job, desired_city, type_of_years_of_experience, type_of_work, salary, without_salary) -> list:
+def get_links(cur_language, desired_job, desired_city, type_of_years_of_experience, type_of_work, salary, without_salary) -> list:
     user_agent = fake_useragent.UserAgent().random
     header = {'user-agent': user_agent}
 

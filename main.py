@@ -4,7 +4,7 @@ from telebot import types
 from dotenv import load_dotenv
 import os
 
-from parse import get
+from parse import get_links
 from find_number import find_number
 from translate import translate, translate_job, translate_city
 
@@ -17,7 +17,7 @@ API_TOKEN = os.getenv('API_TOKEN')
 bot = telebot.TeleBot(API_TOKEN)
 
 @bot.message_handler(commands=['start'])
-def start(message):
+def command_start(message):
     data = get_data(message.from_user.id)
     cur_language = get_user_language(message.from_user.id)
 
@@ -29,7 +29,7 @@ def start(message):
     bot.send_message(message.chat.id, text, parse_mode='html')
 
 @bot.message_handler(commands=['help'])
-def help(message):
+def command_help(message):
     data = get_data(message.from_user.id)
     cur_language = get_user_language(message.from_user.id)
 
@@ -41,7 +41,7 @@ def help(message):
     bot.send_message(message.chat.id, text, parse_mode='html')
 
 @bot.message_handler(commands=['job'])
-def job(message):
+def command_job(message):
     data = get_data(message.from_user.id)
     cur_language = get_user_language(message.from_user.id)
 
@@ -55,7 +55,7 @@ LANGUAGES_LONG = ['Русский', 'Английский', 'Белорусск�
 LANGUAGES_SHORT = ['ru', 'en', 'be']
 
 @bot.message_handler(commands=['language'])
-def change_language(message):
+def command_language(message):
     data = get_data(message.from_user.id)
     cur_language = get_user_language(message.from_user.id)
 
@@ -66,8 +66,8 @@ def change_language(message):
 
     bot.send_message(message.chat.id, translate('Выберите нужный язык', 'ru', cur_language), parse_mode='html', reply_markup=markup)
 
-@bot.callback_query_handler(func=lambda call: call.data in LANGUAGES_SHORT)
-def callback_change_language(callback):
+@bot.callback_query_handler(func=lambda callback: callback.data in LANGUAGES_SHORT)
+def callback_language(callback):
     data = get_data(callback.from_user.id)
     update_user_language(callback.from_user.id, callback.data)
     cur_language = get_user_language(callback.from_user.id)
@@ -123,7 +123,7 @@ def info_processing(message):
                 data['step'] -= 1
                 info_processing(message)
 
-@bot.callback_query_handler(func=lambda call: call.data == 'finished' or '0' <= call.data <= '4')
+@bot.callback_query_handler(func=lambda callback: callback.data == 'finished' or '0' <= callback.data <= '4')
 def callback_salary(callback):
     data = get_data(callback.from_user.id)
     cur_language = get_user_language(callback.from_user.id)
@@ -141,7 +141,7 @@ def callback_salary(callback):
     bot.send_message(callback.message.chat.id, f'{translate('Введите минимальную зарплату в', 'ru', cur_language)} BYN', parse_mode='html')
     data['step'] += 1
 
-@bot.callback_query_handler(func=lambda call: call.data in ['Yes', 'No'])
+@bot.callback_query_handler(func=lambda callback: callback.data in ['Yes', 'No'])
 def callback_without_salary(callback):
     data = get_data(callback.from_user.id)
     cur_language = get_user_language(callback.from_user.id)
@@ -156,7 +156,7 @@ def callback_without_salary(callback):
             data['desired_salary'].append(data[i])
 
     bot.send_message(callback.message.chat.id, translate('Все данные получены, сейчас начнёться поиск', 'ru', cur_language), parse_mode='html')
-    main(callback)
+    iterate(callback)
     bot.send_message(callback.message.chat.id, f'{translate('Поиск окончен', 'ru', cur_language)}\n<code>/start</code> {translate('для нового запроса', 'ru', cur_language)}', parse_mode='html')
     del_data(callback.from_user.id)
 
@@ -164,20 +164,20 @@ TYPES_OF_YEARS_OF_EXPERIENCE = ['noExperience', 'between1And3', 'between3And6', 
 MINIMUM_YEARS_OF_EXPERIENCE = [0, 1, 3]
 TYPES_OF_WORK = ['MONTH', 'SHIFT', 'HOUR', 'FLY_IN_FLY_OUT', 'SERVICE']
 
-def main(callback):
+def iterate(callback):
     data = get_data(callback.from_user.id)
     cur_language = get_user_language(callback.from_user.id)
 
     for i in range(len(MINIMUM_YEARS_OF_EXPERIENCE)):
         if data['years_of_experience'] >= MINIMUM_YEARS_OF_EXPERIENCE[i]:
             for j in range(len(data['types_of_work'])):
-                res = get(cur_language, data['desired_job'], data['desired_city'], TYPES_OF_YEARS_OF_EXPERIENCE[i], TYPES_OF_WORK[data['types_of_work'][j]], data['desired_salary'][j], data['without_salary'])
+                res = get_links(cur_language, data['desired_job'], data['desired_city'], TYPES_OF_YEARS_OF_EXPERIENCE[i], TYPES_OF_WORK[data['types_of_work'][j]], data['desired_salary'][j], data['without_salary'])
                 for vacancy in res:
                     bot.send_message(callback.message.chat.id, vacancy, parse_mode='html')
 
     if data['years_of_experience'] >= 6:
         for j in range(len(data['types_of_work'])):
-            res = get(cur_language, data['desired_job'], data['desired_city'], TYPES_OF_YEARS_OF_EXPERIENCE[-1], TYPES_OF_WORK[data['types_of_work'][j]], data['desired_salary'][j], data['without_salary'])
+            res = get_links(cur_language, data['desired_job'], data['desired_city'], TYPES_OF_YEARS_OF_EXPERIENCE[-1], TYPES_OF_WORK[data['types_of_work'][j]], data['desired_salary'][j], data['without_salary'])
             for vacancy in res:
                 bot.send_message(callback.message.chat.id, vacancy, parse_mode='html')
 
