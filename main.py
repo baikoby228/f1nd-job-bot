@@ -1,8 +1,7 @@
+import os
+from dotenv import load_dotenv
 import telebot
 from telebot import types
-
-from dotenv import load_dotenv
-import os
 
 from parse import get
 from find_number import find_number
@@ -13,8 +12,16 @@ from user_language import get_user_language, update_user_language
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')
-
 bot = telebot.TeleBot(API_TOKEN)
+
+LANGUAGES_LONG = ['Русский', 'Английский', 'Белорусский']
+LANGUAGES_SHORT = ['ru', 'en', 'be']
+TYPES_OF_WORK_RU = ['За месяц', 'За смену', 'За час', 'За вахту', 'За услугу']
+TYPES_OF_YEARS_OF_EXPERIENCE = ['noExperience', 'between1And3', 'between3And6', 'moreThan6']
+MINIMUM_YEARS_OF_EXPERIENCE = [0, 1, 3]
+TYPES_OF_WORK = ['MONTH', 'SHIFT', 'HOUR', 'FLY_IN_FLY_OUT', 'SERVICE']
+is_from_callback = False
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -28,6 +35,7 @@ def start(message):
     )
     bot.send_message(message.chat.id, text, parse_mode='html')
 
+
 @bot.message_handler(commands=['help'])
 def help(message):
     data = get_data(message.from_user.id)
@@ -40,6 +48,7 @@ def help(message):
     )
     bot.send_message(message.chat.id, text, parse_mode='html')
 
+
 @bot.message_handler(commands=['job'])
 def job(message):
     data = get_data(message.from_user.id)
@@ -51,8 +60,6 @@ def job(message):
 
     bot.send_message(message.chat.id, translate('Введите профессию', 'ru', cur_language), parse_mode='html')
 
-LANGUAGES_LONG = ['Русский', 'Английский', 'Белорусский']
-LANGUAGES_SHORT = ['ru', 'en', 'be']
 
 @bot.message_handler(commands=['language'])
 def change_language(message):
@@ -65,6 +72,7 @@ def change_language(message):
         markup.add(b)
 
     bot.send_message(message.chat.id, translate('Выберите нужный язык', 'ru', cur_language), parse_mode='html', reply_markup=markup)
+
 
 @bot.callback_query_handler(func=lambda call: call.data in LANGUAGES_SHORT)
 def callback_change_language(callback):
@@ -83,8 +91,6 @@ def callback_change_language(callback):
     )
     bot.send_message(callback.message.chat.id, text, parse_mode='html')
 
-TYPES_OF_WORK_RU = ['За месяц', 'За смену', 'За час', 'За вахту', 'За услугу']
-is_from_callback = False
 
 @bot.message_handler(content_types=['text'])
 def info_processing(message):
@@ -123,6 +129,7 @@ def info_processing(message):
                 data['step'] -= 1
                 info_processing(message)
 
+
 @bot.callback_query_handler(func=lambda call: call.data == 'finished' or '0' <= call.data <= '4')
 def callback_salary(callback):
     data = get_data(callback.from_user.id)
@@ -141,6 +148,7 @@ def callback_salary(callback):
     bot.send_message(callback.message.chat.id, f'{translate('Введите минимальную зарплату в', 'ru', cur_language)} BYN', parse_mode='html')
     data['step'] += 1
 
+
 @bot.callback_query_handler(func=lambda call: call.data in ['Yes', 'No'])
 def callback_without_salary(callback):
     data = get_data(callback.from_user.id)
@@ -156,15 +164,12 @@ def callback_without_salary(callback):
             data['desired_salary'].append(data[i])
 
     bot.send_message(callback.message.chat.id, translate('Все данные получены, сейчас начнёться поиск', 'ru', cur_language), parse_mode='html')
-    main(callback)
+    iterate(callback)
     bot.send_message(callback.message.chat.id, f'{translate('Поиск окончен', 'ru', cur_language)}\n<code>/start</code> {translate('для нового запроса', 'ru', cur_language)}', parse_mode='html')
     del_data(callback.from_user.id)
 
-TYPES_OF_YEARS_OF_EXPERIENCE = ['noExperience', 'between1And3', 'between3And6', 'moreThan6']
-MINIMUM_YEARS_OF_EXPERIENCE = [0, 1, 3]
-TYPES_OF_WORK = ['MONTH', 'SHIFT', 'HOUR', 'FLY_IN_FLY_OUT', 'SERVICE']
 
-def main(callback):
+def iterate(callback):
     data = get_data(callback.from_user.id)
     cur_language = get_user_language(callback.from_user.id)
 
@@ -180,5 +185,6 @@ def main(callback):
             res = get(cur_language, data['desired_job'], data['desired_city'], TYPES_OF_YEARS_OF_EXPERIENCE[-1], TYPES_OF_WORK[data['types_of_work'][j]], data['desired_salary'][j], data['without_salary'])
             for vacancy in res:
                 bot.send_message(callback.message.chat.id, vacancy, parse_mode='html')
+
 
 bot.infinity_polling(timeout=60, long_polling_timeout=120)
