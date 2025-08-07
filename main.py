@@ -25,7 +25,6 @@ is_from_callback = False
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    data = get_data(message.from_user.id)
     cur_language = get_user_language(message.from_user.id)
 
     text = (
@@ -38,7 +37,6 @@ def start(message):
 
 @bot.message_handler(commands=['help'])
 def help(message):
-    data = get_data(message.from_user.id)
     cur_language = get_user_language(message.from_user.id)
 
     text = (
@@ -63,7 +61,6 @@ def job(message):
 
 @bot.message_handler(commands=['language'])
 def change_language(message):
-    data = get_data(message.from_user.id)
     cur_language = get_user_language(message.from_user.id)
 
     markup = types.InlineKeyboardMarkup(row_width=3)
@@ -76,7 +73,6 @@ def change_language(message):
 
 @bot.callback_query_handler(func=lambda call: call.data in LANGUAGES_SHORT)
 def callback_change_language(callback):
-    data = get_data(callback.from_user.id)
     update_user_language(callback.from_user.id, callback.data)
     cur_language = get_user_language(callback.from_user.id)
 
