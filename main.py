@@ -4,12 +4,15 @@ from telebot import types
 from dotenv import load_dotenv
 import os
 
-from parse import get_links
-from find_number import find_number
-from translate import translate, translate_job, translate_city
-
 from session import get_data, del_data
 from user_language import get_user_language, update_user_language
+from user_step import set_user_step, del_user_step
+
+from parse import get_links
+from translate import translate
+
+from input_processing import input_processing
+import steps
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')
@@ -42,14 +45,7 @@ def command_help(message):
 
 @bot.message_handler(commands=['job'])
 def command_job(message):
-    data = get_data(message.from_user.id)
-    cur_language = get_user_language(message.from_user.id)
-
-    data['step'] = 0
-    for x in range(5):
-        data[x] = -1
-
-    bot.send_message(message.chat.id, translate('Введите профессию', 'ru', cur_language), parse_mode='html')
+    steps.start_job_processing(message)
 
 LANGUAGES_LONG = ['Русский', 'Английский', 'Белорусский']
 LANGUAGES_SHORT = ['ru', 'en', 'be']
@@ -83,45 +79,11 @@ def callback_language(callback):
     )
     bot.send_message(callback.message.chat.id, text, parse_mode='html')
 
-TYPES_OF_WORK_RU = ['За месяц', 'За смену', 'За час', 'За вахту', 'За услугу']
 is_from_callback = False
 
 @bot.message_handler(content_types=['text'])
-def info_processing(message):
-    data = get_data(message.from_user.id)
-    cur_language = get_user_language(message.from_user.id)
-
-    if 'step' in data:
-        match data['step']:
-            case 0:
-                data['desired_job'] = translate_job(message.text, cur_language)
-                bot.send_message(message.chat.id, translate('Введите название города', 'ru', cur_language), parse_mode='html')
-                data['step'] += 1
-            case 1:
-                data['desired_city'] = translate_city(message.text)
-                bot.send_message(message.chat.id, translate('Введите количество лет опыта работы в этой профессии', 'ru', cur_language), parse_mode='html')
-                data['step'] += 1
-            case 2:
-                data['years_of_experience'] = int(find_number(message.text))
-
-                flag = False
-                markup = types.InlineKeyboardMarkup()
-                for i in range(5):
-                    b = types.InlineKeyboardButton(f'{translate(TYPES_OF_WORK_RU[i], 'ru', cur_language)}: {'-' if data[i] < 0 else data[i]}', callback_data=str(i))
-                    markup.add(b)
-                    flag |= data[i] >= 0
-
-                dop = ''
-                if flag:
-                    b = types.InlineKeyboardButton(translate('Готово!', 'ru', cur_language), callback_data='finished')
-                    markup.add(b)
-                    dop = 'Если введённые данные верны нажмите Готово!'
-
-                bot.send_message(message.chat.id, translate(f'Выберите типы оплаты {dop}', 'ru', cur_language), parse_mode='html', reply_markup=markup)
-            case 3:
-                data[int(data['cur_type'])] = int(find_number(message.text))
-                data['step'] -= 1
-                info_processing(message)
+def input_text(message):
+    input_processing(message)
 
 @bot.callback_query_handler(func=lambda callback: callback.data == 'finished' or '0' <= callback.data <= '4')
 def callback_salary(callback):
@@ -135,11 +97,12 @@ def callback_salary(callback):
         markup.add(b_yes, b_no)
 
         bot.send_message(callback.message.chat.id, translate('Показывать объявления без указанной зарплаты?', 'ru', cur_language), parse_mode='html', reply_markup=markup)
+        set_user_step(callback.from_user.id, -1)
         return
 
     data['cur_type'] = int(callback.data)
     bot.send_message(callback.message.chat.id, f'{translate('Введите минимальную зарплату в', 'ru', cur_language)} BYN', parse_mode='html')
-    data['step'] += 1
+    set_user_step(callback.from_user.id, 4)
 
 @bot.callback_query_handler(func=lambda callback: callback.data in ['Yes', 'No'])
 def callback_without_salary(callback):
@@ -156,8 +119,9 @@ def callback_without_salary(callback):
             data['desired_salary'].append(data[i])
 
     bot.send_message(callback.message.chat.id, translate('Все данные получены, сейчас начнёться поиск', 'ru', cur_language), parse_mode='html')
+    del_user_step(callback.from_user.id)
     iterate(callback)
-    bot.send_message(callback.message.chat.id, f'{translate('Поиск окончен', 'ru', cur_language)}\n<code>/start</code> {translate('для нового запроса', 'ru', cur_language)}', parse_mode='html')
+    bot.send_message(callback.message.chat.id, f'{translate('Поиск окончен', 'ru', cur_language)}\n<code>/job</code> {translate('для нового запроса', 'ru', cur_language)}', parse_mode='html')
     del_data(callback.from_user.id)
 
 TYPES_OF_YEARS_OF_EXPERIENCE = ['noExperience', 'between1And3', 'between3And6', 'moreThan6']

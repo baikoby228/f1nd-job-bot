@@ -28,7 +28,7 @@ def get_amount_of_pages(desired_job,  type_of_years_of_experience, type_of_work,
     response = requests.get(URL, params=params, headers=header)
     soup = BeautifulSoup(response.text, "lxml")
 
-    amount_of_vacancies = find_number(soup.find("h1", class_='magritte-text___gMq2l_7-0-2 magritte-text-overflow___UBrTV_7-0-2 magritte-text-typography-small___QbQNX_7-0-2 magritte-text-style-primary___8SAJp_7-0-2').text)
+    amount_of_vacancies = find_number(soup.find("h1", class_='magritte-text___gMq2l_7-0-3 magritte-text-overflow___UBrTV_7-0-3 magritte-text-typography-small___QbQNX_7-0-3 magritte-text-style-primary___8SAJp_7-0-3').text)
     amount_of_pages = (amount_of_vacancies + 19) // 20
 
     return amount_of_pages
@@ -62,13 +62,13 @@ def get_links(cur_language, desired_job, desired_city, type_of_years_of_experien
 
         for block in blocks:
             block_header = block.find("h2", class_='bloko-header-section-2')
-            cur_job = block_header.find("span", class_='magritte-text___tkzIl_6-0-3')
+            cur_job = block_header.find("span", class_='magritte-text___tkzIl_6-0-4')
 
             block_info = block.find("div", class_='info-section--YaC_npvTFcwpFd1I')
-            block_city_arr = block_info.find_all("div", class_='narrow-container--HaV4hduxPuElpx0V')
+            block_city_arr = block_info.find("div", class_='wide-container--ZEcmUvt6oNs8OvdB').find_all("div", class_='narrow-container--HaV4hduxPuElpx0V')
             block_city = block_city_arr[-1]
 
-            cur_city = block_city.find("span", class_='magritte-text___pbpft_4-1-0 magritte-text_style-primary___AQ7MW_4-1-0 magritte-text_typography-label-3-regular___Nhtlp_4-1-0')
+            cur_city = block_city.find("span", class_='magritte-text___pbpft_4-1-1 magritte-text_style-primary___AQ7MW_4-1-1 magritte-text_typography-label-3-regular___Nhtlp_4-1-1')
             if not desired_city.lower() in cur_city.text.lower():
                 continue
 
