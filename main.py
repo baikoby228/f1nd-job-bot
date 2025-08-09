@@ -83,7 +83,8 @@ def callback_language(callback):
 
     text = (
         f'{translate(f'{long_language_name} выбран \n', 'ru', cur_language)}\n'
-        f'<code>/start</code> {translate('для нового запроса', 'ru', cur_language)}'
+        f'<code>/job</code> {translate('для нового запроса', 'ru', cur_language)}\n'
+        f'<code>/help</code> {translate(' для всех команд', 'ru', cur_language)}'
     )
     bot.send_message(chat_id, text, parse_mode='html')
 
@@ -135,7 +136,12 @@ def callback_without_salary(callback):
     bot.send_message(chat_id, translate('Все данные получены, сейчас начнёться поиск', 'ru', cur_language), parse_mode='html')
     del_user_step(user_id)
     iterate(callback)
-    bot.send_message(chat_id, f'{translate('Поиск окончен', 'ru', cur_language)}\n<code>/job</code> {translate('для нового запроса', 'ru', cur_language)}', parse_mode='html')
+    text = (
+        f'{translate('Поиск окончен', 'ru', cur_language)}\n'
+        f'<code>/job</code> {translate('для нового запроса', 'ru', cur_language)}\n'
+        f'<code>/help</code> {translate(' для всех команд', 'ru', cur_language)}'
+    )
+    bot.send_message(chat_id, text, parse_mode='html')
     del_data(user_id)
 
 TYPES_OF_YEARS_OF_EXPERIENCE = ['noExperience', 'between1And3', 'between3And6', 'moreThan6']
