@@ -61,7 +61,7 @@ def processing_step(user_id, chat_id, current_step, text: str = '-1'):
             if is_ready:
                 button = types.InlineKeyboardButton(translate('Готово!', 'ru', cur_language), callback_data='finished')
                 markup.add(button)
-                finish_text = 'Если введённые данные верны нажмите Готово!'
+                finish_text = '. Если введённые данные верны нажмите Готово!'
 
             bot.send_message(chat_id, translate(f'Выберите типы оплаты {finish_text}', 'ru', cur_language), parse_mode='html', reply_markup=markup)
 

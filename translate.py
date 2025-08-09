@@ -40,8 +40,8 @@ def translate_job(text: str, source: str) -> str:
     response = client.chat.completions.create(
         model='gpt-4o-mini',
         messages=[
-            {'role': 'user', 'content': text},
-            {'role': 'system', 'content': content}
+            {'role': 'system', 'content': content},
+            {'role': 'user', 'content': text}
         ],
         web_search=False
     )
