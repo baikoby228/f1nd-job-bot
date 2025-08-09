@@ -16,18 +16,6 @@ API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
 
-def start_job_processing(message):
-    user_id = message.from_user.id
-    chat_id = message.chat.id
-
-    data = get_data(user_id)
-
-    start_user_step(user_id)
-    for x in range(5):
-        data[x] = -1
-
-    processing_step(user_id, chat_id, 0)
-
 TYPES_OF_WORK_RU = ['За месяц', 'За смену', 'За час', 'За вахту', 'За услугу']
 
 def processing_step(user_id, chat_id, current_step, text: str = '-1'):
