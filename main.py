@@ -149,8 +149,6 @@ def iterate(callback):
     data = get_data(user_id)
     cur_language = get_user_language(user_id)
 
-    print(data['desired_job'], data['desired_city'])
-
     for i in range(len(MINIMUM_YEARS_OF_EXPERIENCE)):
         if data['years_of_experience'] >= MINIMUM_YEARS_OF_EXPERIENCE[i]:
             for j in range(len(data['types_of_work'])):
