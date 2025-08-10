@@ -4,22 +4,22 @@ from telebot import types
 from dotenv import load_dotenv
 import os
 
-from user_language import get_user_language
-
+from session import get_user
 from translate import translate
+
+from global_constants import LANGUAGES_LONG, LANGUAGES_SHORT
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
 
-from global_constants import LANGUAGES_LONG, LANGUAGES_SHORT
-
-def processing(message):
+def processing(message) -> None:
     user_id = message.from_user.id
     chat_id = message.chat.id
 
-    cur_language = get_user_language(user_id)
+    user = get_user(user_id)
+    cur_language = user.language
 
     markup = types.InlineKeyboardMarkup(row_width=3)
     for i in range(3):

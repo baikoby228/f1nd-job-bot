@@ -1,8 +1,6 @@
 from deep_translator import GoogleTranslator
-
 from transliterate import translit
 from rapidfuzz import process
-
 from g4f.client import Client
 
 def translate(text: str, source: str, target: str) -> str:

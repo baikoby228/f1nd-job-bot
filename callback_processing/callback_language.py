@@ -3,8 +3,7 @@ import telebot
 from dotenv import load_dotenv
 import os
 
-from user_language import get_user_language, update_user_language
-
+from session import get_user
 from translate import translate
 
 from global_constants import LANGUAGES_LONG, LANGUAGES_SHORT
@@ -14,12 +13,13 @@ API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
 
-def processing(callback):
+def processing(callback) -> None:
     user_id = callback.from_user.id
     chat_id = callback.message.chat.id
 
-    update_user_language(user_id, callback.data)
-    cur_language = get_user_language(user_id)
+    user = get_user(user_id)
+    user.language = callback.data
+    cur_language = user.language
 
     long_language_name: str
     for i in range(3):

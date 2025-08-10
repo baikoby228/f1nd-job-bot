@@ -4,10 +4,7 @@ from telebot import types
 from dotenv import load_dotenv
 import os
 
-from session import get_data
-from user_language import get_user_language
-from user_step import set_user_step
-
+from session import get_user
 from translate import translate
 
 load_dotenv()
@@ -15,12 +12,12 @@ API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
 
-def processing(callback):
+def processing(callback) -> None:
     user_id = callback.from_user.id
     chat_id = callback.message.chat.id
 
-    data = get_data(user_id)
-    cur_language = get_user_language(user_id)
+    user = get_user(user_id)
+    cur_language = user.language
 
     if callback.data == 'finished':
         markup = types.InlineKeyboardMarkup(row_width=2)
@@ -29,9 +26,9 @@ def processing(callback):
         markup.add(button_yes, button_no)
 
         bot.send_message(chat_id, translate('Показывать объявления без указанной зарплаты?', 'ru', cur_language), parse_mode='html', reply_markup=markup)
-        set_user_step(user_id, -1)
+        user.step = -1
         return
 
-    data['cur_type'] = int(callback.data)
+    user.cur_type = int(callback.data)
     bot.send_message(chat_id, f'{translate('Введите минимальную зарплату в', 'ru', cur_language)} BYN', parse_mode='html')
-    set_user_step(user_id, 4)
+    user.step = 4

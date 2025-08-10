@@ -1,11 +1,12 @@
-from user_step import get_user_step
+from session import get_user
 from steps import processing_step
 
-def input_processing(message):
+def input_processing(message) -> None:
     user_id = message.from_user.id
     chat_id = message.chat.id
 
-    current_step = get_user_step(user_id)
+    user = get_user(user_id)
+    current_step = user.step
 
     if current_step != -1:
-        processing_step(user_id, chat_id, current_step, message.text)
+        processing_step(user_id, chat_id, message.text)
