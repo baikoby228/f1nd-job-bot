@@ -4,9 +4,8 @@ from telebot import types
 from dotenv import load_dotenv
 import os
 
-from session import get_user
-from find_number import find_number
-from translate import translate, translate_city, translate_job
+from ..user_session import get_user
+from utils import find_number, translate, translate_city, translate_job
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')

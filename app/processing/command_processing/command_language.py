@@ -4,17 +4,16 @@ from telebot import types
 from dotenv import load_dotenv
 import os
 
-from session import get_user
-from translate import translate
-
-from global_constants import LANGUAGES_LONG, LANGUAGES_SHORT
+from ...user_session import get_user
+from utils import translate
+from config import LANGUAGES_LONG, LANGUAGES_SHORT
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
 
-def processing(message) -> None:
+def processing_command_language(message) -> None:
     user_id = message.from_user.id
     chat_id = message.chat.id
 

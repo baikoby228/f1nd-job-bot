@@ -1,5 +1,5 @@
-from session import get_user
-from steps import processing_step
+from ..user_session import get_user
+from .steps import processing_step
 
 def input_processing(message) -> None:
     user_id = message.from_user.id

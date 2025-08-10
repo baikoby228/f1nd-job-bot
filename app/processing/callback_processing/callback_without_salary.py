@@ -3,15 +3,15 @@ import telebot
 from dotenv import load_dotenv
 import os
 
-from session import get_user
-from iterate import iterate
+from ...user_session import get_user
+from ...parser import iterate
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
 
-def processing(callback) -> None:
+def processing_callback_without_salary(callback) -> None:
     user_id = callback.from_user.id
     chat_id = callback.message.chat.id
 

@@ -3,9 +3,9 @@ import telebot
 from dotenv import load_dotenv
 import os
 
-from session import get_user
-from parse import get_links
-from translate import translate
+from ..parser import get_links
+from ..user_session import get_user
+from utils import translate
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')

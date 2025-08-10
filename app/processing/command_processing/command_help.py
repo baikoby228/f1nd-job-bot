@@ -3,15 +3,15 @@ import telebot
 from dotenv import load_dotenv
 import os
 
-from session import get_user
-from translate import translate
+from ...user_session import get_user
+from utils import translate
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
 
-def processing(message) -> None:
+def processing_command_help(message) -> None:
     user_id = message.from_user.id
     chat_id = message.chat.id
 
@@ -19,7 +19,7 @@ def processing(message) -> None:
     cur_language = user.get_language()
 
     text = (
-        f'<code>/start</code> {translate(' я расскажу о себе', 'ru', cur_language).lower()}\n'
+        f'<code>/info</code> {translate(' я расскажу о себе', 'ru', cur_language).lower()}\n'
         f'<code>/job</code> {translate(' для поиска по критериям', 'ru', cur_language).lower()}\n'
         f'<code>/language</code> {translate(' для смены языка', 'ru', cur_language).lower()}'
     )

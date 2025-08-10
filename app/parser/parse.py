@@ -2,8 +2,7 @@ import requests
 import fake_useragent
 from bs4 import BeautifulSoup
 
-from find_number import find_number
-from translate import translate_job
+from utils import find_number, translate_job
 
 URL = 'https://brest.rabota.by/search/vacancy'
 
