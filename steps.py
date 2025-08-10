@@ -17,7 +17,7 @@ TYPES_OF_WORK_RU = ['За месяц', 'За смену', 'За час', 'За �
 
 def processing_step(user_id, chat_id, text: str = '-1') -> None:
     user = get_user(user_id)
-    cur_language = user.language
+    cur_language = user.get_language()
 
     match user.step:
         case 0:

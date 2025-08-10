@@ -16,7 +16,7 @@ def processing(message) -> None:
     chat_id = message.chat.id
 
     user = get_user(user_id)
-    cur_language = user.language
+    cur_language = user.get_language()
 
     text = (
         f'{translate('Привет! Я дам все вакансии на', 'ru', cur_language)} rabota.by {translate('по заданным критериям', 'ru', cur_language).lower()}\n'

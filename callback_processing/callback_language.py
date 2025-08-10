@@ -18,8 +18,8 @@ def processing(callback) -> None:
     chat_id = callback.message.chat.id
 
     user = get_user(user_id)
-    user.language = callback.data
-    cur_language = user.language
+    user.set_language(callback.data)
+    cur_language = user.get_language()
 
     long_language_name: str
     for i in range(3):

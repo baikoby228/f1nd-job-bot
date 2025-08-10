@@ -17,7 +17,7 @@ def processing(callback) -> None:
     chat_id = callback.message.chat.id
 
     user = get_user(user_id)
-    cur_language = user.language
+    cur_language = user.get_language()
 
     if callback.data == 'finished':
         markup = types.InlineKeyboardMarkup(row_width=2)

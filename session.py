@@ -4,7 +4,7 @@ session = {}
 
 def create_user(id: int):
     if not id in session:
-        session[id] = UserData()
+        session[id] = UserData(id)
 
 def get_user(id: int):
     if not id in session:

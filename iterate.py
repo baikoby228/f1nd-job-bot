@@ -18,7 +18,7 @@ TYPES_OF_WORK = ['MONTH', 'SHIFT', 'HOUR', 'FLY_IN_FLY_OUT', 'SERVICE']
 
 def iterate(user_id, chat_id) -> None:
     user = get_user(user_id)
-    cur_language = user.language
+    cur_language = user.get_language()
 
     bot.send_message(chat_id, translate('Все данные получены, сейчас начнёться поиск', 'ru', cur_language), parse_mode='html')
 

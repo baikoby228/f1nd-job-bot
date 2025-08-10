@@ -19,7 +19,7 @@ def processing(message) -> None:
     chat_id = message.chat.id
 
     user = get_user(user_id)
-    cur_language = user.language
+    cur_language = user.get_language()
 
     markup = types.InlineKeyboardMarkup(row_width=3)
     for i in range(3):

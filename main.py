@@ -19,7 +19,7 @@ API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', 'info'])
 def command_start_handler(message):
     command_start.processing(message)
 
