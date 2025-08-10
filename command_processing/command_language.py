@@ -13,8 +13,7 @@ API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
 
-LANGUAGES_LONG = ['Русский', 'Английский', 'Белорусский']
-LANGUAGES_SHORT = ['ru', 'en', 'be']
+from global_constants import LANGUAGES_LONG, LANGUAGES_SHORT
 
 def processing(message):
     user_id = message.from_user.id

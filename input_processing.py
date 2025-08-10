@@ -1,5 +1,5 @@
-from steps import processing_step
 from user_step import get_user_step
+from steps import processing_step
 
 def input_processing(message):
     user_id = message.from_user.id

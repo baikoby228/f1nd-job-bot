@@ -19,8 +19,8 @@ def processing(message):
     cur_language = get_user_language(user_id)
 
     text = (
-        f'<code>/start</code> {translate(' я расскажу о себе', 'ru', cur_language)}\n'
-        f'<code>/job</code> {translate(' для поиска по критериям', 'ru', cur_language)}\n'
-        f'<code>/language</code> {translate(' для смены языка', 'ru', cur_language)}'
+        f'<code>/start</code> {translate(' я расскажу о себе', 'ru', cur_language).lower()}\n'
+        f'<code>/job</code> {translate(' для поиска по критериям', 'ru', cur_language).lower()}\n'
+        f'<code>/language</code> {translate(' для смены языка', 'ru', cur_language).lower()}'
     )
     bot.send_message(chat_id, text, parse_mode='html')

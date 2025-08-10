@@ -6,7 +6,7 @@ import os
 
 from session import get_data
 from user_language import get_user_language
-from user_step import *
+from user_step import set_next_user_step, set_user_step
 
 from find_number import find_number
 from translate import translate, translate_city, translate_job
@@ -27,7 +27,7 @@ def processing_step(user_id, chat_id, current_step, text: str = '-1'):
             bot.send_message(chat_id, translate('Введите профессию', 'ru', cur_language), parse_mode='html')
             set_next_user_step(user_id)
         case 1:
-            data['desired_job'] = translate_job(text, cur_language)
+            data['desired_job'] = translate_job(text, cur_language, 'ru')
             bot.send_message(chat_id, translate('Введите название города', 'ru', cur_language), parse_mode='html')
             set_next_user_step(user_id)
         case 2:

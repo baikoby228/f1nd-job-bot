@@ -3,7 +3,7 @@ import fake_useragent
 from bs4 import BeautifulSoup
 
 from find_number import find_number
-from translate import translate
+from translate import translate_job
 
 URL = 'https://brest.rabota.by/search/vacancy'
 
@@ -73,6 +73,6 @@ def get_links(cur_language, desired_job, desired_city, type_of_years_of_experien
                 continue
 
             cur_link = block.find("a")
-            res.append(f'{translate(cur_job.text, 'ru', cur_language)} - {cur_link['href']}')
+            res.append(f'{translate_job(cur_job.text, 'ru', cur_language)} - {cur_link['href']}')
 
     return res

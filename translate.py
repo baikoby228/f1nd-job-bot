@@ -24,17 +24,17 @@ def translate_city(text: str) -> str:
     return res
 
 client = Client()
-def translate_job(text: str, source: str) -> str:
-    if source == 'ru':
+def translate_job(text: str, source: str, target: str) -> str:
+    if source == target:
         return text
 
     content = (
-        f'Твоя задача перевести данное слово с языка {source} на язык ru. '
+        f'Твоя задача перевести данное слово с языка {source} на язык {target}. '
         f'Ты должен перевести слово, как название профессии. '
         f'Ответь только перевеодом, без объяснений, без вежливости без знаков перпинания.'
         f'Примеры: '
-        f'1. Если нужно перевести с en: ввод пользователья "Cleaner", твой ответ "уборщик"; '
-        f'2. Если нужно перевести с be: ввод пользователья "прыбіральнік", твой ответ "уборщик"'
+        f'1. Если нужно перевести с ru на en: ввод пользователья "курьер/Уборщик", твой ответ "Cleaner"; '
+        f'2. Если нужно перевести с be на ru: ввод пользователья "Прыбіральнік", твой ответ "Уборщик"'
     )
 
     response = client.chat.completions.create(
