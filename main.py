@@ -21,7 +21,7 @@ def command_start_handler(message):
 def command_help_handler(message):
     processing_command_help(message)
 
-@bot.message_handler(commands=['job'])  
+@bot.message_handler(commands=['job'])
 def command_job_handler(message):
     processing_command_job(message)
 

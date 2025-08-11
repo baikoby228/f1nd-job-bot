@@ -5,13 +5,13 @@ from bs4 import BeautifulSoup
 from utils import find_number, translate_job
 from config import URL
 
-def get_amount_of_pages(desired_job,  type_of_years_of_experience, type_of_work, salary, without_salary) -> int:
+def get_amount_of_pages(desired_job, desired_city, type_of_years_of_experience, type_of_work, salary, without_salary) -> int:
     user_agent = fake_useragent.UserAgent().random
     header = {'user-agent': user_agent}
 
     params = {
         'area': 16,
-        'text': desired_job,
+        'text': f'{desired_job} {desired_city}',
         'page': 0,
         'items_on_page': 20,
         'salary_mode': type_of_work,
@@ -37,11 +37,11 @@ def get_links(cur_language, desired_job, desired_city, type_of_years_of_experien
 
     res = []
 
-    amount_of_pages = get_amount_of_pages(desired_job,  type_of_years_of_experience, type_of_work, salary, without_salary)
+    amount_of_pages = get_amount_of_pages(desired_job, desired_city, type_of_years_of_experience, type_of_work, salary, without_salary)
     for page in range(amount_of_pages):
         params = {
             'area': 16,
-            'text': desired_job,
+            'text': f'{desired_job} {desired_city}',
             'page': page,
             'items_on_page': 20,
             'salary_mode': type_of_work,
@@ -56,6 +56,7 @@ def get_links(cur_language, desired_job, desired_city, type_of_years_of_experien
         response = requests.get(URL, params=params, headers=header)
         soup = BeautifulSoup(response.text, "lxml")
 
+        print(response.url)
         blocks = soup.find_all("div", class_='vacancy-info--ieHKDTkezpEj0Gsx')
 
         for block in blocks:
