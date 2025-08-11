@@ -3,7 +3,7 @@ import telebot
 from dotenv import load_dotenv
 import os
 
-from ...user_session import get_user
+from ...user_session import create_user, del_user
 from utils import translate
 
 load_dotenv()
@@ -15,7 +15,7 @@ def processing_command_help(message) -> None:
     user_id = message.from_user.id
     chat_id = message.chat.id
 
-    user = get_user(user_id)
+    user = create_user(user_id)
     cur_language = user.get_language()
 
     text = (
@@ -24,3 +24,5 @@ def processing_command_help(message) -> None:
         f'<code>/language</code> {translate(' для смены языка', 'ru', cur_language).lower()}'
     )
     bot.send_message(chat_id, text, parse_mode='html')
+
+    del_user(user_id)

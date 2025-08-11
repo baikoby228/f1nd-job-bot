@@ -38,10 +38,3 @@ def iterate(user_id, chat_id) -> None:
             res = get_links(cur_language, user.desired_job, user.desired_city, TYPES_OF_YEARS_OF_EXPERIENCE[-1], TYPES_OF_WORK[user.types_of_work[j]], user.desired_salary[j], user.without_salary)
             for vacancy in res:
                 bot.send_message(chat_id, vacancy, parse_mode='html')
-
-    text = (
-        f'{translate('Поиск окончен', 'ru', cur_language)}\n'
-        f'<code>/job</code> {translate('для нового запроса', 'ru', cur_language).lower()}\n'
-        f'<code>/help</code> {translate(' для всех команд', 'ru', cur_language).lower()}'
-    )
-    bot.send_message(chat_id, text, parse_mode='html')

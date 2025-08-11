@@ -3,8 +3,8 @@ from .user_data import UserData
 session = {}
 
 def create_user(id: int):
-    if not id in session:
-        session[id] = UserData(id)
+    session[id] = UserData(id)
+    return session[id]
 
 def get_user(id: int):
     if not id in session:

@@ -27,4 +27,4 @@ class UserData:
         connector.set_language(self.id, new_language)
 
     def get_language(self):
-        return connector.get_language(self.id)
+        return self.language
