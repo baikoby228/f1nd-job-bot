@@ -3,8 +3,7 @@ import fake_useragent
 from bs4 import BeautifulSoup
 
 from utils import find_number, translate_job
-
-URL = 'https://brest.rabota.by/search/vacancy'
+from config import URL
 
 def get_amount_of_pages(desired_job,  type_of_years_of_experience, type_of_work, salary, without_salary) -> int:
     user_agent = fake_useragent.UserAgent().random

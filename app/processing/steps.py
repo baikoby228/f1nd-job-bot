@@ -6,13 +6,12 @@ import os
 
 from ..user_session import get_user
 from utils import find_number, translate, translate_city, translate_job
+from config import TYPES_OF_WORK_RU
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
-
-TYPES_OF_WORK_RU = ['За месяц', 'За смену', 'За час', 'За вахту', 'За услугу']
 
 def processing_step(user_id, chat_id, text: str = '-1') -> None:
     user = get_user(user_id)

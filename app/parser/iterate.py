@@ -6,15 +6,12 @@ import os
 from ..parser import get_links
 from ..user_session import get_user
 from utils import translate
+from config import TYPES_OF_YEARS_OF_EXPERIENCE, MINIMUM_YEARS_OF_EXPERIENCE, TYPES_OF_WORK
 
 load_dotenv()
 API_TOKEN = os.getenv('API_TOKEN')
 
 bot = telebot.TeleBot(API_TOKEN)
-
-TYPES_OF_YEARS_OF_EXPERIENCE = ['noExperience', 'between1And3', 'between3And6', 'moreThan6']
-MINIMUM_YEARS_OF_EXPERIENCE = [0, 1, 3]
-TYPES_OF_WORK = ['MONTH', 'SHIFT', 'HOUR', 'FLY_IN_FLY_OUT', 'SERVICE']
 
 def iterate(user_id, chat_id) -> None:
     user = get_user(user_id)
