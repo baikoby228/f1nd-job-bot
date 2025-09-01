@@ -17,7 +17,7 @@ def iterate(user_id, chat_id) -> None:
     user = get_user(user_id)
     cur_language = user.get_language()
 
-    bot.send_message(chat_id, translate('Все данные получены, сейчас начнёться поиск', 'ru', cur_language), parse_mode='html')
+    bot.send_message(chat_id, translate('Все данные получены, сейчас начнётся поиск', 'ru', cur_language), parse_mode='html')
 
     user.types_of_work = []
     user.desired_salary = []

@@ -61,7 +61,7 @@ def get_links(cur_language, desired_job, desired_city, type_of_years_of_experien
 
         for block in blocks:
             block_header = block.find("h2", class_='bloko-header-section-2')
-            cur_job = block_header.find("span", class_='magritte-text___tkzIl_6-0-4')
+            cur_job = block_header.find("span", class_='magritte-text___tkzIl_6-0-5')
 
             block_info = block.find("div", class_='info-section--YaC_npvTFcwpFd1I')
             block_city_arr = block_info.find("div", class_='wide-container--ZEcmUvt6oNs8OvdB').find_all("div", class_='narrow-container--HaV4hduxPuElpx0V')
